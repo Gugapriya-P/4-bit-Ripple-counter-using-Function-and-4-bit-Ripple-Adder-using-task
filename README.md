@@ -121,3 +121,5 @@ endmodule
 
 <img width="1627" height="908" alt="image" src="https://github.com/user-attachments/assets/e77ac2fa-6c52-403d-b442-23a8d3ad2d42" />
 
+# Conclusion
+In this experiment, a 4-bit-Ripple-counter-using-Function-and-4-bit-Ripple-Adder-using-task was successfully designed and simulated using Verilog HDL.
