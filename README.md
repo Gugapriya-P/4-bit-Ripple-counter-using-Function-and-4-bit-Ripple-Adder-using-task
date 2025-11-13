@@ -24,62 +24,100 @@ Capture screenshots of the waveform and save the simulation logs. These will be 
 # Verilog Code
 # 4 bit Ripple Adder using Task
 // 4-bit Ripple Carry Adder using Task
-module ripple_adder_task (
-    input [3:0] A, B,
-    input Cin,
-    output reg [3:0] Sum,
-    output reg Cout
-);
-    reg c;
+```
+    module rca (input  [3:0] a,input  [3:0] b,input cin,output reg [3:0] sum,output reg cout
+    );
     integer i;
-
+    reg c;
     task full_adder;
         input a, b, cin;
         output s, cout;
         begin
-        ///
+            s    = a ^ b ^ cin;
+            cout = (a & b) | (b & cin) | (a & cin);
         end
     endtask
-
-    always @(*) 
-    begin
-        c = Cin;
-        for (i = 0; i < 4; i = i + 1) begin
-            full_adder(A[i], B[i], c, Sum[i], c);
-        end
-        Cout = c;
+    always @(*) begin
+    c = cin;
+    for (i = 0; i < 4; i = i + 1) begin
+        full_adder(a[i], b[i], c, sum[i], c);
     end
-endmodule
+    cout = c;
+    end
+    endmodule
 
-
+```
 # Test Bench
+```
+    module rca_tb;
+    reg  [3:0] a, b;
+    reg        cin;
+    wire [3:0] sum;
+    wire       cout;
 
+    rca uut (a, b, cin, sum, cout);
+
+    initial begin
+        $monitor("Time=%0t | a=%b b=%b cin=%b | sum=%b cout=%b",
+                  $time, a, b, cin, sum, cout);
+
+        a=4'b0000; b=4'b0000; cin=0;
+        #10 a=4'b0101; b=4'b0011; cin=0;
+        #10 a=4'b1111; b=4'b0001; cin=0;
+        #10 a=4'b1010; b=4'b0101; cin=1;
+        #10 a=4'b1111; b=4'b1111; cin=1;
+        #10 $finish;
+    end
+    endmodule
+```
 # Output Waveform
 
-# 4 bit Ripple counter using Function
-// 4-bit Ripple Counter using Function
-module ripple_counter_func (
-    input clk, rst,
+<img width="1630" height="916" alt="image" src="https://github.com/user-attachments/assets/d3ff2126-a9a0-4105-b4b4-f5cc8f026245" />
+
+# 4-bit-Ripple-counter-using-Function
+# Verilog Code
+```
+module rcf (
+    input clk,
+    input rst,
     output reg [3:0] Q
 );
 
     function [3:0] count;
-     ///
+        input [3:0] x;
+        begin
+            count = x + 1;
+        end
     endfunction
 
     always @(posedge clk or posedge rst) begin
         if (rst)
             Q <= 4'b0000;
         else
-            Q <= count(Q);  // use function to increment
+            Q <= count(Q);
     end
+
 endmodule
+```
+# Testbench
+```
+module rcf_tb;
+    reg clk_t, rst_t;
+    wire [3:0] q_t;
 
-# Test Bench
+    rcf dut(.clk(clk_t), .rst(rst_t), .Q(q_t));
 
+    initial begin
+        clk_t = 0;
+        rst_t = 1;
+        #5 rst_t = 0;
+    end
 
-# Output Waveform 
+    always #10 clk_t = ~clk_t;
 
+endmodule
+```
+# Output Waveform
 
-# Conclusion
-In this experiment, a 4-bit-Ripple-counter-using-Function-and-4-bit-Ripple-Adder-using-task was successfully designed and simulated using Verilog HDL.
+<img width="1627" height="908" alt="image" src="https://github.com/user-attachments/assets/e77ac2fa-6c52-403d-b442-23a8d3ad2d42" />
+
